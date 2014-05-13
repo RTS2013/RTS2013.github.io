@@ -114,8 +114,10 @@ Elm.Main.make = function (_elm) {
                              50)
                              ,menu
                              ,content]))]));
-   var main = A2(Signal._op["<~"],
-   background(display),
+   var main = A2(Signal._op["~"],
+   A2(Signal._op["<~"],
+   background,
+   Signal.constant(display)),
    Window.dimensions);
    _elm.Main.values = {_op: _op
                       ,main: main

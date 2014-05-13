@@ -1,7 +1,8 @@
 import Text
 import Window
+import Random
 
-main = background display <~ Window.dimensions
+main = background <~ constant display ~ Window.dimensions
 
 display = 
     flow right 

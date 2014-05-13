@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="UTF-8"><title>Collision</title><script type="text/javascript" src="dependencies/elm-runtime.js"></script><script type="text/javascript">Elm.Collision = Elm.Collision || {};
+Elm.Collision.make = function (_elm) {
+   "use strict";
+   _elm.Collision = _elm.Collision || {};
+   if (_elm.Collision.values)
+   return _elm.Collision.values;
+   var _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Collision";
+   var Basics = Elm.Basics.make(_elm);
+   var Color = Elm.Color.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Collage = Elm.Graphics.Collage.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Element = Elm.Graphics.Element.make(_elm);
+   var List = Elm.List.make(_elm);
+   var Maybe = Elm.Maybe.make(_elm);
+   var Native = Native || {};
+   Native.Json = Elm.Native.Json.make(_elm);
+   var Native = Native || {};
+   Native.Ports = Elm.Native.Ports.make(_elm);
+   var Random = Elm.Random.make(_elm);
+   var Signal = Elm.Signal.make(_elm);
+   var String = Elm.String.make(_elm);
+   var Text = Elm.Text.make(_elm);
+   var Time = Elm.Time.make(_elm);
+   var _op = {};
+   var moveUnit = F4(function (a,
+   _v0,
+   dist,
+   inRange) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var len = List.length(inRange);
+                 var push = A2(List.foldl,
+                 F2(function (_v4,_v5) {
+                    return function () {
+                       switch (_v5.ctor)
+                       {case "_Tuple2":
+                          return function () {
+                               switch (_v4.ctor)
+                               {case "_Tuple2":
+                                  return {ctor: "_Tuple2"
+                                         ,_0: _v4._0 + _v5._0
+                                         ,_1: _v4._1 + _v5._1};}
+                               _E.Case($moduleName,
+                               "on line 48, column 35 to 46");
+                            }();}
+                       _E.Case($moduleName,
+                       "on line 48, column 35 to 46");
+                    }();
+                 }),
+                 {ctor: "_Tuple2"
+                 ,_0: 0
+                 ,_1: 0})(A2(List.map,
+                 function (b) {
+                    return function () {
+                       var $ = {ctor: "_Tuple2"
+                               ,_0: a.x - b.x
+                               ,_1: a.y - b.y},
+                       xDif = $._0,
+                       yDif = $._1;
+                       var wDif = 1 / Basics.toFloat(len);
+                       var rDif = a.r + b.r - Basics.sqrt(Math.pow(xDif,
+                       2) + Math.pow(yDif,2));
+                       var angl = A2(Basics.atan2,
+                       yDif,
+                       xDif);
+                       return {ctor: "_Tuple2"
+                              ,_0: Basics.cos(angl) * rDif * wDif
+                              ,_1: Basics.sin(angl) * rDif * wDif};
+                    }();
+                 },
+                 inRange));
+                 var newXY = function (_v12) {
+                    return function () {
+                       switch (_v12.ctor)
+                       {case "_Tuple2":
+                          return _U.cmp(len,
+                            6) < 0 ? function () {
+                               var rDif = A2(Basics.min,
+                               Basics.sqrt(Math.pow(_v0._1 - a.y,
+                               2) + Math.pow(_v0._0 - a.x,2)),
+                               dist);
+                               var angl = A2(Basics.atan2,
+                               _v0._1 - a.y,
+                               _v0._0 - a.x);
+                               return {ctor: "_Tuple2"
+                                      ,_0: a.x + _v12._0 + Basics.cos(angl) * rDif
+                                      ,_1: a.y + _v12._1 + Basics.sin(angl) * rDif};
+                            }() : {ctor: "_Tuple2"
+                                  ,_0: a.x + _v12._0
+                                  ,_1: a.y + _v12._1};}
+                       _E.Case($moduleName,
+                       "between lines 56 and 62");
+                    }();
+                 };
+                 var $ = newXY(push),
+                 nx = $._0,
+                 ny = $._1;
+                 return _U.replace([["x",nx]
+                                   ,["y",ny]],
+                 a);
+              }();}
+         _E.Case($moduleName,
+         "between lines 46 and 64");
+      }();
+   });
+   var touching = F2(function (a,
+   b) {
+      return _U.cmp(Math.pow(a.x - b.x,
+      2) + Math.pow(a.y - b.y,2),
+      Math.pow(a.r + b.r,2)) < 1;
+   });
+   var moveUnits = function (xs) {
+      return A2(Basics.flip,
+      List.map,
+      xs)(function (u) {
+         return function () {
+            var ang = A2(Basics.atan2,
+            0 - u.y,
+            0 - u.x);
+            return _U.replace([["x"
+                               ,u.x + 2 * Basics.cos(ang)]
+                              ,["y"
+                               ,u.y + 2 * Basics.sin(ang)]],
+            u);
+         }();
+      });
+   };
+   var units = _L.fromArray([{_: {}
+                             ,r: 32
+                             ,x: 188.71561652049422
+                             ,y: -153.0935812741518}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: -153.15972343087196
+                             ,y: -9.749480430036783}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: 198.16306615248322
+                             ,y: 55.05271311849356}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: -138.17938724532723
+                             ,y: 177.7329869568348}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: -103.26284980401397
+                             ,y: -105.50304148346186}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: -91.96685971692204
+                             ,y: 77.50591281801462}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: -114.42862143740058
+                             ,y: 131.34195627644658}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: 29.059351980686188
+                             ,y: 62.94285096228123}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: 135.08485443890095
+                             ,y: -61.13499440252781}
+                            ,{_: {}
+                             ,r: 32
+                             ,x: 5.365708097815514
+                             ,y: -5.062213074415922}]);
+   var collision = A3(Signal.foldp,
+   F2(function (_v16,xs) {
+      return function () {
+         return A2(List.map,
+         function (a) {
+            return A4(moveUnit,
+            a,
+            {ctor: "_Tuple2",_0: 0,_1: 0},
+            1,
+            A2(List.filter,touching(a),xs));
+         },
+         xs);
+      }();
+   }),
+   units,
+   Time.fps(10));
+   var main = A2(Signal._op["<~"],
+   A2(Graphics.Collage.collage,
+   1400,
+   1000),
+   A2(Signal._op["<~"],
+   List.map(function (a) {
+      return Graphics.Collage.move({ctor: "_Tuple2"
+                                   ,_0: a.x
+                                   ,_1: a.y})(Graphics.Collage.filled(Color.black)(Graphics.Collage.circle(a.r)));
+   }),
+   collision));
+   var Unit = F3(function (a,b,c) {
+      return {_: {}
+             ,r: c
+             ,x: a
+             ,y: b};
+   });
+   _elm.Collision.values = {_op: _op
+                           ,collision: collision
+                           ,units: units
+                           ,moveUnits: moveUnits
+                           ,touching: touching
+                           ,main: main
+                           ,moveUnit: moveUnit
+                           ,Unit: Unit};
+   return _elm.Collision.values;
+};</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Collision)</script><noscript></noscript></body></html>
