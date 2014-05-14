@@ -1,32 +1,33 @@
 import Text
 import Window
 import Random
+import Collision
 
-main = background <~ constant display ~ Window.dimensions
+main = background <~ Window.width ~ (display <~ Collision.demo)
 
-display = 
+background w = width w . color (rgb 175 200 100)
+
+display collisionDemo = 
     flow right 
         [spacer 50 1
         , flow down 
             [ spacer 1 50
             , menu
-            , content]
+            , flow down <| map (\a -> flow down [a,backToTop])
+                [ topic
+                , needToKnow
+                , gameDesc
+                , gameModel
+                , flow down [unitCollision, collisionDemo]
+                ]
+            ]
         ]
-
-background element (w,h) = width w . height h <| color (rgb 175 200 100) element
 
 menu = flow down <| map Text.leftAligned
     [ Text.link "index.html#topic" (toText "Topic")
     , Text.link "index.html#need-to-know" (toText "Need To Know")
     , Text.link "index.html#game-desc" (toText "Game Description")
     , Text.link "index.html#game-model" (toText "Game Model")
-    ]
-
-content = flow down <| map (\a -> flow down [a,backToTop])
-    [ topic
-    , needToKnow
-    , gameDesc
-    , gameModel
     ]
 
 backToTop = link "index.html" <|
@@ -66,4 +67,8 @@ gameDesc = tag "game-desc" [markdown|
 
 gameModel = tag "game-model" [markdown|
 # Game Model
+|]
+
+unitCollision = tag "unit-collision" [markdown|
+# Unit Collision
 |]

@@ -11,6 +11,7 @@ Elm.Main.make = function (_elm) {
    _E = _N.Error.make(_elm),
    $moduleName = "Main";
    var Basics = Elm.Basics.make(_elm);
+   var Collision = Elm.Collision.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Graphics = Graphics || {};
    Graphics.Collage = Elm.Graphics.Collage.make(_elm);
@@ -22,28 +23,33 @@ Elm.Main.make = function (_elm) {
    Native.Json = Elm.Native.Json.make(_elm);
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
+   var Random = Elm.Random.make(_elm);
    var Signal = Elm.Signal.make(_elm);
    var String = Elm.String.make(_elm);
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var Window = Elm.Window.make(_elm);
    var _op = {};
+   var unitCollision = A2(Graphics.Element.tag,
+   "unit-collision",
+   Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"unit-collision\">Unit Collision</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
+   "72:38"));
    var gameModel = A2(Graphics.Element.tag,
    "game-model",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"game-model\">Game Model</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "66:30"));
+   "68:30"));
    var gameDesc = A2(Graphics.Element.tag,
    "game-desc",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"game-description\">Game Description</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "62:28"));
+   "64:28"));
    var needToKnow = A2(Graphics.Element.tag,
    "need-to-know",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"need-to-know\">Need To Know</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "58:33"));
+   "60:33"));
    var topic = A2(Graphics.Element.tag,
    "topic",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"haskell-and-javascript-real-time-strategy-game\">Haskell and JavaScript Real-Time Strategy Game</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "54:21"));
+   "56:21"));
    var smallLinkStyle = {_: {}
                         ,bold: false
                         ,color: Color.complement(A3(Color.rgb,
@@ -66,16 +72,6 @@ Elm.Main.make = function (_elm) {
                                                 ,"arial"
                                                 ,"sans-serif"])};
    var backToTop = Graphics.Element.link("index.html")(Text.leftAligned(Text.style(smallLinkStyle)(Text.toText("Back to the top of the page &uarr;"))));
-   var content = Graphics.Element.flow(Graphics.Element.down)(A2(List.map,
-   function (a) {
-      return A2(Graphics.Element.flow,
-      Graphics.Element.down,
-      _L.fromArray([a,backToTop]));
-   },
-   _L.fromArray([topic
-                ,needToKnow
-                ,gameDesc
-                ,gameModel])));
    var menu = Graphics.Element.flow(Graphics.Element.down)(A2(List.map,
    Text.leftAligned,
    _L.fromArray([A2(Text.link,
@@ -90,47 +86,276 @@ Elm.Main.make = function (_elm) {
                 ,A2(Text.link,
                 "index.html#game-model",
                 Text.toText("Game Model"))])));
-   var background = F2(function (element,
-   _v0) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return Graphics.Element.width(_v0._0)(Graphics.Element.height(_v0._1)(A2(Graphics.Element.color,
-              A3(Color.rgb,175,200,100),
-              element)));}
-         _E.Case($moduleName,
-         "on line 15, column 28 to 81");
-      }();
-   });
-   var display = A2(Graphics.Element.flow,
-   Graphics.Element.right,
-   _L.fromArray([A2(Graphics.Element.spacer,
-                50,
-                1)
-                ,A2(Graphics.Element.flow,
-                Graphics.Element.down,
-                _L.fromArray([A2(Graphics.Element.spacer,
-                             1,
-                             50)
-                             ,menu
-                             ,content]))]));
+   var display = function (collisionDemo) {
+      return A2(Graphics.Element.flow,
+      Graphics.Element.right,
+      _L.fromArray([A2(Graphics.Element.spacer,
+                   50,
+                   1)
+                   ,A2(Graphics.Element.flow,
+                   Graphics.Element.down,
+                   _L.fromArray([A2(Graphics.Element.spacer,
+                                1,
+                                50)
+                                ,menu
+                                ,Graphics.Element.flow(Graphics.Element.down)(A2(List.map,
+                                function (a) {
+                                   return A2(Graphics.Element.flow,
+                                   Graphics.Element.down,
+                                   _L.fromArray([a,backToTop]));
+                                },
+                                _L.fromArray([topic
+                                             ,needToKnow
+                                             ,gameDesc
+                                             ,gameModel
+                                             ,A2(Graphics.Element.flow,
+                                             Graphics.Element.down,
+                                             _L.fromArray([unitCollision
+                                                          ,collisionDemo]))])))]))]));
+   };
+   var background = function (w) {
+      return function ($) {
+         return Graphics.Element.width(w)(Graphics.Element.color(A3(Color.rgb,
+         175,
+         200,
+         100))($));
+      };
+   };
    var main = A2(Signal._op["~"],
    A2(Signal._op["<~"],
    background,
-   Signal.constant(display)),
-   Window.dimensions);
+   Window.width),
+   A2(Signal._op["<~"],
+   display,
+   Collision.demo));
    _elm.Main.values = {_op: _op
                       ,main: main
-                      ,display: display
                       ,background: background
+                      ,display: display
                       ,menu: menu
-                      ,content: content
                       ,backToTop: backToTop
                       ,paragraphStyle: paragraphStyle
                       ,smallLinkStyle: smallLinkStyle
                       ,topic: topic
                       ,needToKnow: needToKnow
                       ,gameDesc: gameDesc
-                      ,gameModel: gameModel};
+                      ,gameModel: gameModel
+                      ,unitCollision: unitCollision};
    return _elm.Main.values;
+};Elm.Collision = Elm.Collision || {};
+Elm.Collision.make = function (_elm) {
+   "use strict";
+   _elm.Collision = _elm.Collision || {};
+   if (_elm.Collision.values)
+   return _elm.Collision.values;
+   var _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Collision";
+   var Basics = Elm.Basics.make(_elm);
+   var Color = Elm.Color.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Collage = Elm.Graphics.Collage.make(_elm);
+   var Graphics = Graphics || {};
+   Graphics.Element = Elm.Graphics.Element.make(_elm);
+   var List = Elm.List.make(_elm);
+   var Maybe = Elm.Maybe.make(_elm);
+   var Native = Native || {};
+   Native.Json = Elm.Native.Json.make(_elm);
+   var Native = Native || {};
+   Native.Ports = Elm.Native.Ports.make(_elm);
+   var Random = Elm.Random.make(_elm);
+   var Signal = Elm.Signal.make(_elm);
+   var String = Elm.String.make(_elm);
+   var Text = Elm.Text.make(_elm);
+   var Time = Elm.Time.make(_elm);
+   var _op = {};
+   var touching = F2(function (a,
+   b) {
+      return _U.cmp(Math.pow(a.x - b.x,
+      2) + Math.pow(a.y - b.y,2),
+      Math.pow(a.r + b.r,2)) < 1;
+   });
+   var moveXY = F4(function (a,
+   _v0,
+   dist,
+   nearby) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var inRange = A2(List.filter,
+                 function (b) {
+                    return A2(touching,
+                    a,
+                    b) && !_U.eq(b,a);
+                 },
+                 nearby);
+                 var len = List.length(inRange);
+                 var push = A2(List.foldl,
+                 F2(function (_v4,_v5) {
+                    return function () {
+                       switch (_v5.ctor)
+                       {case "_Tuple2":
+                          return function () {
+                               switch (_v4.ctor)
+                               {case "_Tuple2":
+                                  return {ctor: "_Tuple2"
+                                         ,_0: _v4._0 + _v5._0
+                                         ,_1: _v4._1 + _v5._1};}
+                               _E.Case($moduleName,
+                               "on line 37, column 39 to 54");
+                            }();}
+                       _E.Case($moduleName,
+                       "on line 37, column 39 to 54");
+                    }();
+                 }),
+                 {ctor: "_Tuple2"
+                 ,_0: 0
+                 ,_1: 0})(A2(List.map,
+                 function (b) {
+                    return function () {
+                       var $ = {ctor: "_Tuple2"
+                               ,_0: a.x - b.x
+                               ,_1: a.y - b.y},
+                       xDif = $._0,
+                       yDif = $._1;
+                       var wDif = (a.w + b.w) / (2 * a.w) / Basics.toFloat(len + 1);
+                       var rDif = a.r + b.r - Basics.sqrt(Math.pow(xDif,
+                       2) + Math.pow(yDif,2));
+                       var angl = A2(Basics.atan2,
+                       yDif,
+                       xDif);
+                       return {ctor: "_Tuple2"
+                              ,_0: Basics.cos(angl) * rDif * wDif
+                              ,_1: Basics.sin(angl) * rDif * wDif};
+                    }();
+                 },
+                 inRange));
+                 var newXY = function (_v12) {
+                    return function () {
+                       switch (_v12.ctor)
+                       {case "_Tuple2":
+                          return _U.cmp(len,
+                            6) < 0 ? function () {
+                               var rDif = A2(Basics.min,
+                               Basics.sqrt(Math.pow(_v0._1 - a.y,
+                               2) + Math.pow(_v0._0 - a.x,2)),
+                               dist);
+                               var angl = A2(Basics.atan2,
+                               _v0._1 - a.y,
+                               _v0._0 - a.x);
+                               return {ctor: "_Tuple2"
+                                      ,_0: a.x + _v12._0 + Basics.cos(angl) * rDif
+                                      ,_1: a.y + _v12._1 + Basics.sin(angl) * rDif};
+                            }() : {ctor: "_Tuple2"
+                                  ,_0: a.x + _v12._0
+                                  ,_1: a.y + _v12._1};}
+                       _E.Case($moduleName,
+                       "between lines 45 and 51");
+                    }();
+                 };
+                 var $ = newXY(push),
+                 nx = $._0,
+                 ny = $._1;
+                 return _U.replace([["x",nx]
+                                   ,["y",ny]],
+                 a);
+              }();}
+         _E.Case($moduleName,
+         "between lines 34 and 53");
+      }();
+   });
+   var everyTen = A2(Signal.sampleOn,
+   Time.every(5 * Time.second),
+   Signal.constant(20));
+   var genUnits = A2(Signal._op["<~"],
+   List.map(function (_v16) {
+      return function () {
+         switch (_v16.ctor)
+         {case "_Tuple2": return {_: {}
+                                 ,r: 16
+                                 ,w: 1
+                                 ,x: _v16._0 * 400 - 200
+                                 ,y: _v16._1 * 400 - 200};}
+         _E.Case($moduleName,
+         "on line 13, column 28 to 79");
+      }();
+   }),
+   A2(Signal._op["~"],
+   A2(Signal._op["<~"],
+   List.zipWith(F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   })),
+   Random.floatList(everyTen)),
+   Random.floatList(everyTen)));
+   var collideUnits = A3(Signal.foldp,
+   F2(function (randUnits,xs) {
+      return function () {
+         switch (randUnits.ctor)
+         {case "[]": return A2(List.map,
+              function (a) {
+                 return A4(moveXY,
+                 a,
+                 {ctor: "_Tuple2",_0: 0,_1: 0},
+                 1,
+                 A2(List.filter,touching(a),xs));
+              },
+              xs);}
+         return A2(List.map,
+         function (a) {
+            return A4(moveXY,
+            a,
+            {ctor: "_Tuple2",_0: 0,_1: 0},
+            1,
+            A2(List.filter,
+            touching(a),
+            randUnits));
+         },
+         randUnits);
+      }();
+   }),
+   _L.fromArray([]),
+   Signal.merge(A2(Signal.sampleOn,
+   Time.every(5 * Time.second),
+   genUnits))(A2(Signal.sampleOn,
+   Time.fps(30),
+   Signal.constant(_L.fromArray([])))));
+   var demo = A2(Signal._op["<~"],
+   function ($) {
+      return Graphics.Element.color(A3(Color.rgb,
+      255,
+      255,
+      255))(A2(Graphics.Collage.collage,
+      400,
+      400)($));
+   },
+   A2(Signal._op["<~"],
+   List.map(function (a) {
+      return Graphics.Collage.move({ctor: "_Tuple2"
+                                   ,_0: a.x
+                                   ,_1: a.y})(Graphics.Collage.filled(A4(Color.rgba,
+      0,
+      0,
+      0,
+      0.8))(Graphics.Collage.circle(a.r)));
+   }),
+   collideUnits));
+   var Unit = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,r: c
+             ,w: d
+             ,x: a
+             ,y: b};
+   });
+   _elm.Collision.values = {_op: _op
+                           ,demo: demo};
+   return _elm.Collision.values;
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script><noscript></noscript></body></html>

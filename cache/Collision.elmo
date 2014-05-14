@@ -27,14 +27,27 @@ Elm.Collision.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var moveUnit = F4(function (a,
+   var touching = F2(function (a,
+   b) {
+      return _U.cmp(Math.pow(a.x - b.x,
+      2) + Math.pow(a.y - b.y,2),
+      Math.pow(a.r + b.r,2)) < 1;
+   });
+   var moveXY = F4(function (a,
    _v0,
    dist,
-   inRange) {
+   nearby) {
       return function () {
          switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
+                 var inRange = A2(List.filter,
+                 function (b) {
+                    return A2(touching,
+                    a,
+                    b) && !_U.eq(b,a);
+                 },
+                 nearby);
                  var len = List.length(inRange);
                  var push = A2(List.foldl,
                  F2(function (_v4,_v5) {
@@ -48,10 +61,10 @@ Elm.Collision.make = function (_elm) {
                                          ,_0: _v4._0 + _v5._0
                                          ,_1: _v4._1 + _v5._1};}
                                _E.Case($moduleName,
-                               "on line 48, column 35 to 46");
+                               "on line 37, column 39 to 54");
                             }();}
                        _E.Case($moduleName,
-                       "on line 48, column 35 to 46");
+                       "on line 37, column 39 to 54");
                     }();
                  }),
                  {ctor: "_Tuple2"
@@ -64,7 +77,7 @@ Elm.Collision.make = function (_elm) {
                                ,_1: a.y - b.y},
                        xDif = $._0,
                        yDif = $._1;
-                       var wDif = 1 / Basics.toFloat(len);
+                       var wDif = (a.w + b.w) / (2 * a.w) / Basics.toFloat(len + 1);
                        var rDif = a.r + b.r - Basics.sqrt(Math.pow(xDif,
                        2) + Math.pow(yDif,2));
                        var angl = A2(Basics.atan2,
@@ -96,7 +109,7 @@ Elm.Collision.make = function (_elm) {
                                   ,_0: a.x + _v12._0
                                   ,_1: a.y + _v12._1};}
                        _E.Case($moduleName,
-                       "between lines 56 and 62");
+                       "between lines 45 and 51");
                     }();
                  };
                  var $ = newXY(push),
@@ -107,111 +120,98 @@ Elm.Collision.make = function (_elm) {
                  a);
               }();}
          _E.Case($moduleName,
-         "between lines 46 and 64");
+         "between lines 34 and 53");
       }();
    });
-   var touching = F2(function (a,
-   b) {
-      return _U.cmp(Math.pow(a.x - b.x,
-      2) + Math.pow(a.y - b.y,2),
-      Math.pow(a.r + b.r,2)) < 1;
-   });
-   var moveUnits = function (xs) {
-      return A2(Basics.flip,
-      List.map,
-      xs)(function (u) {
-         return function () {
-            var ang = A2(Basics.atan2,
-            0 - u.y,
-            0 - u.x);
-            return _U.replace([["x"
-                               ,u.x + 2 * Basics.cos(ang)]
-                              ,["y"
-                               ,u.y + 2 * Basics.sin(ang)]],
-            u);
-         }();
-      });
-   };
-   var units = _L.fromArray([{_: {}
-                             ,r: 32
-                             ,x: 188.71561652049422
-                             ,y: -153.0935812741518}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: -153.15972343087196
-                             ,y: -9.749480430036783}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: 198.16306615248322
-                             ,y: 55.05271311849356}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: -138.17938724532723
-                             ,y: 177.7329869568348}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: -103.26284980401397
-                             ,y: -105.50304148346186}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: -91.96685971692204
-                             ,y: 77.50591281801462}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: -114.42862143740058
-                             ,y: 131.34195627644658}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: 29.059351980686188
-                             ,y: 62.94285096228123}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: 135.08485443890095
-                             ,y: -61.13499440252781}
-                            ,{_: {}
-                             ,r: 32
-                             ,x: 5.365708097815514
-                             ,y: -5.062213074415922}]);
-   var collision = A3(Signal.foldp,
-   F2(function (_v16,xs) {
+   var everyTen = A2(Signal.sampleOn,
+   Time.every(5 * Time.second),
+   Signal.constant(20));
+   var genUnits = A2(Signal._op["<~"],
+   List.map(function (_v16) {
       return function () {
+         switch (_v16.ctor)
+         {case "_Tuple2": return {_: {}
+                                 ,r: 16
+                                 ,w: 1
+                                 ,x: _v16._0 * 400 - 200
+                                 ,y: _v16._1 * 400 - 200};}
+         _E.Case($moduleName,
+         "on line 13, column 28 to 79");
+      }();
+   }),
+   A2(Signal._op["~"],
+   A2(Signal._op["<~"],
+   List.zipWith(F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   })),
+   Random.floatList(everyTen)),
+   Random.floatList(everyTen)));
+   var collideUnits = A3(Signal.foldp,
+   F2(function (randUnits,xs) {
+      return function () {
+         switch (randUnits.ctor)
+         {case "[]": return A2(List.map,
+              function (a) {
+                 return A4(moveXY,
+                 a,
+                 {ctor: "_Tuple2",_0: 0,_1: 0},
+                 1,
+                 A2(List.filter,touching(a),xs));
+              },
+              xs);}
          return A2(List.map,
          function (a) {
-            return A4(moveUnit,
+            return A4(moveXY,
             a,
             {ctor: "_Tuple2",_0: 0,_1: 0},
             1,
-            A2(List.filter,touching(a),xs));
+            A2(List.filter,
+            touching(a),
+            randUnits));
          },
-         xs);
+         randUnits);
       }();
    }),
-   units,
-   Time.fps(10));
-   var main = A2(Signal._op["<~"],
-   A2(Graphics.Collage.collage,
-   1400,
-   1000),
+   _L.fromArray([]),
+   Signal.merge(A2(Signal.sampleOn,
+   Time.every(5 * Time.second),
+   genUnits))(A2(Signal.sampleOn,
+   Time.fps(30),
+   Signal.constant(_L.fromArray([])))));
+   var demo = A2(Signal._op["<~"],
+   function ($) {
+      return Graphics.Element.color(A3(Color.rgb,
+      255,
+      255,
+      255))(A2(Graphics.Collage.collage,
+      400,
+      400)($));
+   },
    A2(Signal._op["<~"],
    List.map(function (a) {
       return Graphics.Collage.move({ctor: "_Tuple2"
                                    ,_0: a.x
-                                   ,_1: a.y})(Graphics.Collage.filled(Color.black)(Graphics.Collage.circle(a.r)));
+                                   ,_1: a.y})(Graphics.Collage.filled(A4(Color.rgba,
+      0,
+      0,
+      0,
+      0.8))(Graphics.Collage.circle(a.r)));
    }),
-   collision));
-   var Unit = F3(function (a,b,c) {
+   collideUnits));
+   var Unit = F4(function (a,
+   b,
+   c,
+   d) {
       return {_: {}
              ,r: c
+             ,w: d
              ,x: a
              ,y: b};
    });
    _elm.Collision.values = {_op: _op
-                           ,collision: collision
-                           ,units: units
-                           ,moveUnits: moveUnits
-                           ,touching: touching
-                           ,main: main
-                           ,moveUnit: moveUnit
-                           ,Unit: Unit};
+                           ,demo: demo};
    return _elm.Collision.values;
 };
