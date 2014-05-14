@@ -7,23 +7,25 @@ import Random
 type Unit = {x : Float, y : Float, r : Float, w : Float, rgba : Color}
 
 everyTen : Signal Int
-everyTen = sampleOn (every (8 * second)) (constant 20)
+everyTen = sampleOn (every (8 * second)) (constant 40)
 
 genUnits : Signal [Unit]
 genUnits = 
-    map (\(x,y,r,g,b) -> 
+    map (\(x,y,r,g,b,s) -> 
             {x = x * 400 - 200
             , y = y * 400 - 200
-            , r = 16, w = 1
+            , r = s * 12 + 12
+            , w = s + 1
             , rgba = rgba (floor <| 255 * r) (floor <| 255 * g) (floor <| 255 * b) 0.8}) <~
-    (zip5 <~ Random.floatList everyTen 
+    (zip6 <~ Random.floatList everyTen 
+           ~ Random.floatList everyTen 
            ~ Random.floatList everyTen 
            ~ Random.floatList everyTen 
            ~ Random.floatList everyTen 
            ~ Random.floatList everyTen)
 
-zip5 xs1 xs2 xs3 xs4 xs5 = case (xs1,xs2,xs3,xs4,xs5) of
-    (a::az,b::bz,c::cz,d::dz,e::ez) -> (a,b,c,d,e) :: zip5 az bz cz dz ez
+zip6 xs1 xs2 xs3 xs4 xs5 xs6 = case (xs1,xs2,xs3,xs4,xs5,xs6) of
+    (a::az,b::bz,c::cz,d::dz,e::ez,f::fz) -> (a,b,c,d,e,f) :: zip6 az bz cz dz ez fz
     _ -> []
 
 collideUnits : Signal [Unit]

@@ -205,10 +205,10 @@ Elm.Collision.make = function (_elm) {
                                          ,_0: _v4._0 + _v5._0
                                          ,_1: _v4._1 + _v5._1};}
                                _E.Case($moduleName,
-                               "on line 50, column 39 to 54");
+                               "on line 52, column 39 to 54");
                             }();}
                        _E.Case($moduleName,
-                       "on line 50, column 39 to 54");
+                       "on line 52, column 39 to 54");
                     }();
                  }),
                  {ctor: "_Tuple2"
@@ -253,7 +253,7 @@ Elm.Collision.make = function (_elm) {
                                   ,_0: a.x + _v12._0
                                   ,_1: a.y + _v12._1};}
                        _E.Case($moduleName,
-                       "between lines 58 and 64");
+                       "between lines 60 and 66");
                     }();
                  };
                  var $ = newXY(push),
@@ -264,23 +264,25 @@ Elm.Collision.make = function (_elm) {
                  a);
               }();}
          _E.Case($moduleName,
-         "between lines 47 and 66");
+         "between lines 49 and 68");
       }();
    });
-   var zip5 = F5(function (xs1,
+   var zip6 = F6(function (xs1,
    xs2,
    xs3,
    xs4,
-   xs5) {
+   xs5,
+   xs6) {
       return function () {
-         var _v16 = {ctor: "_Tuple5"
+         var _v16 = {ctor: "_Tuple6"
                     ,_0: xs1
                     ,_1: xs2
                     ,_2: xs3
                     ,_3: xs4
-                    ,_4: xs5};
+                    ,_4: xs5
+                    ,_5: xs6};
          switch (_v16.ctor)
-         {case "_Tuple5":
+         {case "_Tuple6":
             switch (_v16._0.ctor)
               {case "::":
                  switch (_v16._1.ctor)
@@ -290,19 +292,24 @@ Elm.Collision.make = function (_elm) {
                            switch (_v16._3.ctor)
                              {case "::":
                                 switch (_v16._4.ctor)
-                                  {case "::": return {ctor: "::"
-                                                     ,_0: {ctor: "_Tuple5"
-                                                          ,_0: _v16._0._0
-                                                          ,_1: _v16._1._0
-                                                          ,_2: _v16._2._0
-                                                          ,_3: _v16._3._0
-                                                          ,_4: _v16._4._0}
-                                                     ,_1: A5(zip5,
-                                                     _v16._0._1,
-                                                     _v16._1._1,
-                                                     _v16._2._1,
-                                                     _v16._3._1,
-                                                     _v16._4._1)};}
+                                  {case "::":
+                                     switch (_v16._5.ctor)
+                                       {case "::": return {ctor: "::"
+                                                          ,_0: {ctor: "_Tuple6"
+                                                               ,_0: _v16._0._0
+                                                               ,_1: _v16._1._0
+                                                               ,_2: _v16._2._0
+                                                               ,_3: _v16._3._0
+                                                               ,_4: _v16._4._0
+                                                               ,_5: _v16._5._0}
+                                                          ,_1: A6(zip6,
+                                                          _v16._0._1,
+                                                          _v16._1._1,
+                                                          _v16._2._1,
+                                                          _v16._3._1,
+                                                          _v16._4._1,
+                                                          _v16._5._1)};}
+                                       break;}
                                   break;}
                              break;}
                         break;}
@@ -313,31 +320,33 @@ Elm.Collision.make = function (_elm) {
    });
    var everyTen = A2(Signal.sampleOn,
    Time.every(8 * Time.second),
-   Signal.constant(20));
+   Signal.constant(40));
    var genUnits = A2(Signal._op["<~"],
-   List.map(function (_v32) {
+   List.map(function (_v35) {
       return function () {
-         switch (_v32.ctor)
-         {case "_Tuple5": return {_: {}
-                                 ,r: 16
+         switch (_v35.ctor)
+         {case "_Tuple6": return {_: {}
+                                 ,r: _v35._5 * 12 + 12
                                  ,rgba: A4(Color.rgba,
-                                 Basics.floor(255 * _v32._2),
-                                 Basics.floor(255 * _v32._3),
-                                 Basics.floor(255 * _v32._4),
+                                 Basics.floor(255 * _v35._2),
+                                 Basics.floor(255 * _v35._3),
+                                 Basics.floor(255 * _v35._4),
                                  0.8)
-                                 ,w: 1
-                                 ,x: _v32._0 * 400 - 200
-                                 ,y: _v32._1 * 400 - 200};}
+                                 ,w: _v35._5 + 1
+                                 ,x: _v35._0 * 400 - 200
+                                 ,y: _v35._1 * 400 - 200};}
          _E.Case($moduleName,
-         "between lines 15 and 18");
+         "between lines 15 and 19");
       }();
    }),
    A2(Signal._op["~"],
    A2(Signal._op["~"],
    A2(Signal._op["~"],
    A2(Signal._op["~"],
+   A2(Signal._op["~"],
    A2(Signal._op["<~"],
-   zip5,
+   zip6,
+   Random.floatList(everyTen)),
    Random.floatList(everyTen)),
    Random.floatList(everyTen)),
    Random.floatList(everyTen)),
