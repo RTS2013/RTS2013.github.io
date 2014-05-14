@@ -32,23 +32,23 @@ Elm.Main.make = function (_elm) {
    var unitCollision = A2(Graphics.Element.tag,
    "unit-collision",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"unit-collision\">Unit Collision</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "72:38"));
+   "71:38"));
    var gameModel = A2(Graphics.Element.tag,
    "game-model",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"game-model\">Game Model</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "68:30"));
+   "67:30"));
    var gameDesc = A2(Graphics.Element.tag,
    "game-desc",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"game-description\">Game Description</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "64:28"));
+   "63:28"));
    var needToKnow = A2(Graphics.Element.tag,
    "need-to-know",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"need-to-know\">Need To Know</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "60:33"));
+   "59:33"));
    var topic = A2(Graphics.Element.tag,
    "topic",
    Text.markdown("<div style=\"height:0;width:0;\">&nbsp;</div><h1 id=\"haskell-and-javascript-real-time-strategy-game\">Haskell and JavaScript Real-Time Strategy Game</h1><div style=\"height:0;width:0;\">&nbsp;</div>",
-   "56:21"));
+   "55:21"));
    var smallLinkStyle = {_: {}
                         ,bold: false
                         ,color: Color.complement(A3(Color.rgb,

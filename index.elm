@@ -8,9 +8,8 @@ main = background <~ Window.width ~ (display <~ Collision.demo)
 background w = width w . color (rgb 175 200 100)
 
 display collisionDemo = 
-    flow right 
-        [spacer 50 1
-        , flow down 
+    flow right [spacer 50 1, 
+        flow down 
             [ spacer 1 50
             , menu
             , flow down <| map (\a -> flow down [a,backToTop])

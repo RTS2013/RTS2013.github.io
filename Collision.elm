@@ -4,14 +4,27 @@ module Collision
 
 import Random
 
-type Unit = {x : Float, y : Float, r : Float, w : Float}
+type Unit = {x : Float, y : Float, r : Float, w : Float, rgba : Color}
 
 everyTen : Signal Int
 everyTen = sampleOn (every (8 * second)) (constant 20)
 
 genUnits : Signal [Unit]
-genUnits = map (\(x,y) -> {x = x * 400 - 200, y = y * 400 - 200, r = 16, w = 1}) <~
-    (zipWith (,) <~ Random.floatList everyTen ~ Random.floatList everyTen)
+genUnits = 
+    map (\(x,y,r,g,b) -> 
+            {x = x * 400 - 200
+            , y = y * 400 - 200
+            , r = 16, w = 1
+            , rgba = rgba (floor <| 255 * r) (floor <| 255 * g) (floor <| 255 * b) 0.8}) <~
+    (zip5 <~ Random.floatList everyTen 
+           ~ Random.floatList everyTen 
+           ~ Random.floatList everyTen 
+           ~ Random.floatList everyTen 
+           ~ Random.floatList everyTen)
+
+zip5 xs1 xs2 xs3 xs4 xs5 = case (xs1,xs2,xs3,xs4,xs5) of
+    (a::az,b::bz,c::cz,d::dz,e::ez) -> (a,b,c,d,e) :: zip5 az bz cz dz ez
+    _ -> []
 
 collideUnits : Signal [Unit]
 collideUnits = 
@@ -55,6 +68,6 @@ moveXY a (dx,dy) dist nearby =
 demo : Signal Element
 demo = color (rgb 255 255 255) . collage 400 400 <~ 
     (map (\a -> circle a.r 
-             |> filled (rgba 0 0 0 0.8) 
+             |> filled a.rgba
              |> move (a.x, a.y)
     ) <~ collideUnits)
