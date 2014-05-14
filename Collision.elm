@@ -7,7 +7,7 @@ import Random
 type Unit = {x : Float, y : Float, r : Float, w : Float}
 
 everyTen : Signal Int
-everyTen = sampleOn (every (5 * second)) (constant 20)
+everyTen = sampleOn (every (8 * second)) (constant 20)
 
 genUnits : Signal [Unit]
 genUnits = map (\(x,y) -> {x = x * 400 - 200, y = y * 400 - 200, r = 16, w = 1}) <~

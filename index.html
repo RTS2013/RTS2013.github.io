@@ -268,7 +268,7 @@ Elm.Collision.make = function (_elm) {
       }();
    });
    var everyTen = A2(Signal.sampleOn,
-   Time.every(5 * Time.second),
+   Time.every(8 * Time.second),
    Signal.constant(20));
    var genUnits = A2(Signal._op["<~"],
    List.map(function (_v16) {
